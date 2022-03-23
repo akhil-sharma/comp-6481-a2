@@ -14,12 +14,12 @@ public class SalesDatabase {
         salesArr = new ArrayList<>();
     }
 
-    private void addRecord(Sales sale){
-        salesArr.put(sale);
+    public void addRecord(Sales sale){
+        salesArr.add(sale);
     }
 
-    private void displayFileContents(){
-        for(Sales sale: this.salesArr){
+    public void displayFileContents(){
+        for(Sales sale: SalesDatabase.salesArr){
             System.out.println(sale);
         }
     }

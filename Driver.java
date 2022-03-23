@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -129,6 +132,8 @@ public class Driver {
                 } catch (EmptyFolderException efe){
                     System.out.println(efe.getMessage());
 
+                } catch (ParseException pe){
+                    System.out.println("Some date messed up yo!");
                 }
             }
         } catch (FileNotFoundException e) {
@@ -164,7 +169,7 @@ public class Driver {
         }
     }
 
-    private void processFile(File filePath) throws FileNotFoundException{
+    private void processFile(File filePath) throws FileNotFoundException, ParseException{
         Scanner reader = new Scanner(filePath);
         while (reader.hasNextLine()) {
             String data = reader.nextLine();
@@ -174,20 +179,21 @@ public class Driver {
                 System.out.println("Duplicate record found: ");
                 System.out.println(sale);
             } else {
-                hs.put(sale);
+                hs.add(sale);
             }
           }
           reader.close();
     }
 
-    private Sales getSaleFromText(String fileEntry){
-        String values[] = fileEntry.split("\t");
+    private Sales getSaleFromText(String fileEntry) throws ParseException{
+        String values[] = fileEntry.split("\\s+");
         String country = values[0];
         String itemType = values[1];
+        System.out.println("The character is: " + values[2]);
         char orderPriority = values[2].charAt(0);
-        Date orderDate = new Date(values[3]);
+        Date orderDate = new SimpleDateFormat("dd/MM/yyyy").parse(values[3]);
         long orderId = Long.parseLong(values[4]);
-        Date shipDate = new Date(values[5]);
+        Date shipDate = new SimpleDateFormat("dd/MM/yyyy").parse(values[5]);
         int unitsSold = Integer.parseInt(values[6]);
         float unitPrice = Float.parseFloat(values[7]);
         float unitCost = Float.parseFloat(values[8]);
