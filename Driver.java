@@ -18,11 +18,13 @@ public class Driver {
     private Scanner keyboard;
     private StreamRegistry streamRegistry;
     private HashSet<Sales> hs;
+    private SalesDatabase salesDb;
 
     public Driver(){
         this.keyboard = new Scanner(System.in);
         this.streamRegistry = new StreamRegistry();
         this.hs = new HashSet<>();
+        this.salesDb = new SalesDatabase();
     }
     
     public void shutDown(){
@@ -77,16 +79,12 @@ public class Driver {
                 }
 
                 parseLogs();
-                // read each line.
-                // if (streamRegistry.isEmpty()){
-                //     // The files are already loaded.
-                // }
+                for (Sales sale : hs){
+                    this.salesDb.addRecord(sale);
+                }
+                
+                this.salesDb.displayFileContents();
 
-                // if directory =, check empty.
-                // if file, then read it into into a hashset,
-                // report duplicates
-                // add to the database
-                // generate output.
                 mainRepl();
                 break;
 
@@ -170,9 +168,47 @@ public class Driver {
         Scanner reader = new Scanner(filePath);
         while (reader.hasNextLine()) {
             String data = reader.nextLine();
-            System.out.println(data);
+            Sales sale = getSaleFromText(data);
+
+            if (this.hs.contains(sale)){
+                System.out.println("Duplicate record found: ");
+                System.out.println(sale);
+            } else {
+                hs.put(sale);
+            }
           }
           reader.close();
+    }
+
+    private Sales getSaleFromText(String fileEntry){
+        String values[] = fileEntry.split("\t");
+        String country = values[0];
+        String itemType = values[1];
+        char orderPriority = values[2].charAt(0);
+        Date orderDate = new Date(values[3]);
+        long orderId = Long.parseLong(values[4]);
+        Date shipDate = new Date(values[5]);
+        int unitsSold = Integer.parseInt(values[6]);
+        float unitPrice = Float.parseFloat(values[7]);
+        float unitCost = Float.parseFloat(values[8]);
+        double revenue =  Double.parseDouble(values[9]);
+        double totalCost =  Double.parseDouble(values[10]);
+        double totalProfit =  Double.parseDouble(values[11]);
+
+        return new Sales(
+            country, 
+            itemType, 
+            orderPriority, 
+            orderDate, 
+            orderId, 
+            shipDate, 
+            unitsSold, 
+            unitPrice, 
+            unitCost, 
+            revenue, 
+            totalCost, 
+            totalProfit
+        );
     }
     
     /**

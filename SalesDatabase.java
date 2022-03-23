@@ -10,12 +10,18 @@ import java.util.ArrayList;
 public class SalesDatabase {
     private static ArrayList<Sales> salesArr;
 
-    private void addRecord(Sales sale){
+    public SalesDatabase(){
+        salesArr = new ArrayList<>();
+    }
 
+    private void addRecord(Sales sale){
+        salesArr.put(sale);
     }
 
     private void displayFileContents(){
-
+        for(Sales sale: this.salesArr){
+            System.out.println(sale);
+        }
     }
 
     private void binarySaleSearch(long orderID){
