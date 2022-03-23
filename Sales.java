@@ -1,7 +1,8 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-public class Sales{
+public class Sales implements Comparable<Sales>{
     private String country;
     private String itemType;
     private char orderPriority;
@@ -207,19 +208,29 @@ public class Sales{
 
     @Override
     public String toString() {
-        return "{" +
-            " country='" + getCountry() + "'" +
-            ", itemType='" + getItemType() + "'" +
-            ", orderPriority='" + getOrderPriority() + "'" +
-            ", orderDate='" + getOrderDate() + "'" +
-            ", orderID='" + getOrderID() + "'" +
-            ", shipDate='" + getShipDate() + "'" +
-            ", unitsSold='" + getUnitsSold() + "'" +
-            ", unitPrice='" + getUnitPrice() + "'" +
-            ", unitCost='" + getUnitCost() + "'" +
-            ", revenue='" + getRevenue() + "'" +
-            ", totalCost='" + getTotalCost() + "'" +
-            ", totalProfit='" + getTotalProfit() + "'" +
-            "}";
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
+            return (
+                getCountry() + "\t" +
+                getItemType() + "\t" +
+                getOrderPriority() + "\t" +
+                formatter.format(getOrderDate()) + "\t" +
+                getOrderID() + "\t" +
+                formatter.format(getShipDate()) + "\t" +
+                getUnitsSold() + "\t" +
+                getUnitPrice() + "\t" +
+                getUnitCost() + "\t" +
+                getRevenue() + "\t" +
+                getTotalCost() + "\t" +
+                getTotalProfit());
+    }
+
+    @Override
+    public int compareTo(Sales o) {
+        if (this.getOrderID() > o.getOrderID()){
+            return 1;
+        } else if (this.getOrderID() < o.getOrderID()){
+            return -1;
+        }
+        return 0;
     }
 }
