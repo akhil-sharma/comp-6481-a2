@@ -20,13 +20,11 @@ public class Driver {
     private static String OUTPUT_FILE_NAME = "output-.txt";
 
     private Scanner keyboard;
-    private StreamRegistry streamRegistry;
     private HashSet<Sales> hs;
     private SalesDatabase salesDb;
 
     public Driver(){
         this.keyboard = new Scanner(System.in);
-        this.streamRegistry = new StreamRegistry();
         this.hs = new HashSet<>();
         this.salesDb = new SalesDatabase();
     }
@@ -43,7 +41,6 @@ public class Driver {
      */
     public void shutDown(String message){
         keyboard.close();
-        streamRegistry.closeAll();
         System.out.println(message);
         System.exit(0);
     }
@@ -90,7 +87,6 @@ public class Driver {
 
                 this.salesDb.sortSales();
 
-                // write to the output
                 writeSaleToOutput();
                 mainRepl();
                 break;
