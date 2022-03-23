@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -74,10 +75,12 @@ public class Driver {
                     mainRepl();
                     break;
                 }
+
+                parseLogs();
                 // read each line.
-                if (streamRegistry.isEmpty()){
-                    // The files are already loaded.
-                }
+                // if (streamRegistry.isEmpty()){
+                //     // The files are already loaded.
+                // }
 
                 // if directory =, check empty.
                 // if file, then read it into into a hashset,
@@ -95,39 +98,47 @@ public class Driver {
     /**
      * Just process the log file.
      */
-    private void loadStreamRegistry(){
+    // private void loadStreamRegistry(){
         
 
-    }
+    // }
 
-    private void ArrayList<Files> parseLogs(){
-        FileInputStream fstream = new FileInputStream(LOG_FILE_NAME);
-        BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+    private void parseLogs(){
+        try {
+            FileInputStream fstream = new FileInputStream(LOG_FILE_NAME);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
-        String strLine;
-        File filePath;
+            String strLine;
+            File filePath;
 
-        while ((strLine = br.readLine()) != null){
-            strLine = strLine.strip();
-            filePath = new File(strLine.split(":")[1]);
+            while ((strLine = br.readLine()) != null){
+                strLine = strLine.strip();
+                filePath = new File(strLine.split(":")[1]);
 
-            try{
-                if (strLine.startsWith("directory")){
-                    checkEmptyDirectorty(filePath);
-                    // no further processing necessary.
-                
-                } else if (strLine.startsWith("file")){
-                    checkFileExists(filePath);
-                    // add the stream to the registry.
-                    streamRegistry.register(
-                        new Scanner(new FileInputStream(filePath))
-                    );
+                try{
+                    if (strLine.startsWith("directory")){
+                        checkEmptyDirectory(filePath);
+                        // no further processing necessary.
+                    
+                    } else if (strLine.startsWith("file")){
+                        checkFileExists(filePath);
+                        // Process the file.
+                        processFile(filePath);
+                    }
+                } catch(InvalidFileException ife){
+                    System.out.println(ife.getMessage());
+
+                } catch (EmptyFolderException efe){
+                    System.out.println(efe.getMessage());
+
                 }
-            } catch(InvalidFileException ife){
-
-            } catch (EmptyFolderException efe){
-
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
         }
     }
 
@@ -135,7 +146,7 @@ public class Driver {
      * Helper method to check a directory.
      * @param file File object holding the path to the directory.
      */
-    private void checkEmptyDirectorty(File file){
+    private void checkEmptyDirectory(File file) throws InvalidFileException, EmptyFolderException{
         if (!file.exists() || !file.isDirectory()){
             throw new InvalidFileException();
         }
@@ -149,10 +160,19 @@ public class Driver {
      * Helper method to check if the file path is valid.
      * @param file
      */
-    private void checkFileExists(File file){
+    private void checkFileExists(File file) throws InvalidFileException{
         if (!file.exists()){
             throw new InvalidFileException();
         }
+    }
+
+    private void processFile(File filePath) throws FileNotFoundException{
+        Scanner reader = new Scanner(filePath);
+        while (reader.hasNextLine()) {
+            String data = reader.nextLine();
+            System.out.println(data);
+          }
+          reader.close();
     }
     
     /**

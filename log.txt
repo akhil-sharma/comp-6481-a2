@@ -1,7 +1,5 @@
 directory:/home/akhil/Desktop/Assignment-2/Data/2
     file:/home/akhil/Desktop/Assignment-2/Data/2/Sam.txt
-    directory:/home/akhil/Desktop/Assignment-2/Data/2/5
-        file:/home/akhil/Desktop/Assignment-2/Data/2/5/1.txt
 directory:/home/akhil/Desktop/Assignment-2/Data/3
     file:/home/akhil/Desktop/Assignment-2/Data/3/Harry.txt
 directory:/home/akhil/Desktop/Assignment-2/Data/1
