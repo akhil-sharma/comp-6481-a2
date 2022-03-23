@@ -18,17 +18,25 @@ public class SalesDatabase {
         salesArr.add(sale);
     }
 
-    public void displayFileContents(){
-        for(Sales sale: SalesDatabase.salesArr){
-            System.out.println(sale);
+    public void displayFileContents(File fileName){
+        FileInputStream fileStream = new FileInputStream(fileName);
+        BufferedReader br;
+        String line;
+        br = new BufferedReader(new InputStreamReader(fileStream, encoding));
+        
+        while ((line = br.readLine()) != null) {
+            sb.append(line + System.lineSeparator());
         }
+ 
+        return sb.toString();
+        
     }
 
     private void binarySaleSearch(long orderID){
         // keep a track of the iterations.
     }
 
-    private void sequenctialSaleSearch(long orderID){
+    private void sequentialSaleSearch(long orderID){
         // keep a track of the iterations.
     }
 

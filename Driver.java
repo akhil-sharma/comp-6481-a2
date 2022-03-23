@@ -65,6 +65,7 @@ public class Driver {
      */
     public void mainRepl(){
         int choice = displayMenu(keyboard);
+        long orderId;
 
         switch (choice){
             case 1:
@@ -92,6 +93,18 @@ public class Driver {
                 break;
 
             case 3:
+                orderId  = getOrderIDFromUser();
+                // call binary search
+                mainRepl();
+                break;
+
+            case 4:
+                orderId  = getOrderIDFromUser();
+                // call linear search
+                mainRepl();
+                break;
+
+            case 5:
                 shutDown();
         }
     }
@@ -103,6 +116,23 @@ public class Driver {
         
 
     // }
+
+    private long getOrderIDFromUser(){
+        long orderId;
+        do {
+            try{
+                orderId = keyboard.nextLong();
+                break;
+            } catch(InputMismatchException ime){
+                System.out.print("Invalid input. Please try again: ");
+                keyboard.next();
+                continue;
+            }
+            
+        } while(true);
+        keyboard.nextLine();
+        return orderId;
+    }
 
     private void parseLogs(){
         try {
@@ -281,18 +311,20 @@ public class Driver {
         System.out.println("\nWhat would you like to do?");
         System.out.println("\t1. List files.");
         System.out.println("\t2. Process files.");
-        System.out.println("\t3. Exit.");
-        System.out.print("Please select a valid option [1:3]> ");
+        System.out.println("\t3. Binary search.");
+        System.out.println("\t4. Linear Search.");
+        System.out.println("\t5. Exit.");
+        System.out.print("Please select a valid option [1:5]> ");
 
         int choice;
 
         do { // Loop until correct input
             try {
                 choice = keyboard.nextInt();
-                if (choice >= 1 && choice <= 3) {
+                if (choice >= 1 && choice <= 5) {
                     break;
                 } else {
-                    System.out.print("Please enter a number between 1 and 3 (both inclusive): ");
+                    System.out.print("Please enter a number between 1 and 5 (both inclusive): ");
                     continue;
                 }
             } catch (InputMismatchException e) {
