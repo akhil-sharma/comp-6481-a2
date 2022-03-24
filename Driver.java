@@ -13,6 +13,12 @@ import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * The Driver class for the assignment.
+ * This class is not mentioned in the
+ * Assignment description but became necessary
+ * due to the large size of the SalesDatabase class.
+ */
 public class Driver {
 
     private static String BASE_FILE_PATH = "Data";
@@ -23,6 +29,9 @@ public class Driver {
     private HashSet<Sales> hs;
     private SalesDatabase salesDb;
 
+    /**
+     * The default constructor for the Driver class.
+     */
     public Driver(){
         this.keyboard = new Scanner(System.in);
         this.hs = new HashSet<>();
@@ -37,6 +46,9 @@ public class Driver {
      * A wrapper to close all the open streams, 
      * print a final message and exit.
      * 
+     * Note: The code is designed such that a file is closed after every complete read.
+     * So, this method end up closing only the scanner.
+     * 
      * @param message The String to be printed before exitting. DEFAULT: Good bye!
      */
     public void shutDown(String message){
@@ -45,6 +57,10 @@ public class Driver {
         System.exit(0);
     }
 
+    /**
+     * The main method. Instanciated the Driver class calls the mainRepl method.
+     * @param args
+     */
     public static void main(String[] args) {
         Driver driver = new Driver();
         driver.mainRepl();
@@ -81,9 +97,11 @@ public class Driver {
                 }
 
                 parseLogs();
+                this.salesDb.resetSales();
                 for (Sales sale : hs){
                     this.salesDb.addRecord(sale);
                 }
+                hs.clear();
 
                 this.salesDb.sortSales();
 
@@ -114,6 +132,10 @@ public class Driver {
         }
     }
 
+    /**
+     * Write the contents of the SalesArr to a file.
+     * The file name is set to `output-.txt`
+     */
     private void writeSaleToOutput(){
         PrintWriter outputStream = null;
 
@@ -135,6 +157,12 @@ public class Driver {
         }
     }
 
+    /**
+     * Get the name of the file to be displayed by the user.
+     * Repeat until the string represents a valid file name.
+     * 
+     * @return File instace for the file name given by the user.
+     */
     private File getFileFromUser(){
         System.out.print("Please enter the file name (path): ");
         String path;
@@ -155,6 +183,11 @@ public class Driver {
         return file;
     }
 
+    /**
+     * Get the order id from the user.
+     * 
+     * @return long representing the order id of a Sales object.
+     */
     private long getOrderIDFromUser(){
         System.out.print("Please enter the order id: ");
         long orderId;
@@ -173,6 +206,11 @@ public class Driver {
         return orderId;
     }
 
+    /**
+     * Process each entry in the log file.
+     * Check for empty directories, read valid 
+     * sales records from the files. 
+     */
     private void parseLogs(){
         BufferedReader br = null;
         
@@ -237,7 +275,7 @@ public class Driver {
 
     /**
      * Helper method to check if the file path is valid.
-     * @param file
+     * @param file File object holding the path to the file.
      */
     private void checkFileExists(File file) throws InvalidFileException{
         if (!file.exists()){
@@ -245,9 +283,17 @@ public class Driver {
         }
     }
 
+    /**
+     * Read each line of the file to parse and add the Sales instances.
+     * This method also keeps track of the duplicate entries.
+     * @param filePath
+     * @throws FileNotFoundException
+     */
     private void processFile(File filePath) throws FileNotFoundException{
         Scanner reader = new Scanner(filePath);
+        
         while (reader.hasNextLine()) {
+            
             String data = reader.nextLine();
             Sales sale = getSaleFromText(data);
             
@@ -255,18 +301,28 @@ public class Driver {
             if (sale == null){
                 continue;
             }
-
-            if (this.hs.contains(sale)){
-                System.out.println("\nDuplicate record found: ");
+            try {
+                if (this.hs.contains(sale)){
+                    throw new DuplicateRecordException();
+                } else {
+                    hs.add(sale);
+                }
+            } catch (DuplicateRecordException dre){
+                System.out.println(dre.getMessage());
                 System.out.println(sale);
                 System.out.println();
-            } else {
-                hs.add(sale);
             }
+
           }
           reader.close();
     }
 
+    /**
+     * Return the Sales object based on the given text entry in the files.
+     * 
+     * @param fileEntry String representing the entry for a sale in the files.
+     * @return A Sales object.
+     */
     private Sales getSaleFromText(String fileEntry){
         Sales sale = null;
 
@@ -368,6 +424,13 @@ public class Driver {
             }
     }
     
+    /**
+     * Display the menu for the user after each task is performed.
+     * 
+     * @param keyboard An instance of the scanner class.
+     * 
+     * @return This integer representing the choice of the user.
+     */
     private int displayMenu(Scanner keyboard){
         System.out.println("\nWhat would you like to do?");
         System.out.println("\t1. List files.");

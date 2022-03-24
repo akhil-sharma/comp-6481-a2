@@ -2,6 +2,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * The Sales class.
+ * An instance of this class represents a single sale.
+ * All the attributes of this class are accessible through
+ * getters and setters.
+ * This class does not have the default constructor.
+ */
 public class Sales implements Comparable<Sales>{
     private String country;
     private String itemType;
@@ -16,9 +23,22 @@ public class Sales implements Comparable<Sales>{
     private double totalCost;
     private double totalProfit;
 
-    public Sales() {
-    }
-
+    /**
+     * The parameterized constructor for the Sales class.
+     * 
+     * @param country String representing the country associated with the order.
+     * @param itemType String represent the type of the item.
+     * @param orderPriority Char representing the priority of the order.
+     * @param orderDate Date representing the date of the order.
+     * @param orderID Long representing the id of the order.
+     * @param shipDate Date representing the shipping date of the order.
+     * @param unitsSold Integer representing the number of units sold.
+     * @param unitPrice float representing the price of a unit.
+     * @param unitCost float representing the cost of the unit.
+     * @param revenue double representing the total revenue.
+     * @param totalCost double representing the total cost.
+     * @param totalProfit double representing the total profit.
+     */
     public Sales(String country, String itemType, char orderPriority, Date orderDate, long orderID, Date shipDate, int unitsSold, float unitPrice, float unitCost, double revenue, double totalCost, double totalProfit) {
         this.country = country;
         this.itemType = itemType;
@@ -224,6 +244,12 @@ public class Sales implements Comparable<Sales>{
                 getTotalProfit());
     }
 
+    /**
+     * Overriding the compareTo method.
+     * Useful when sorting the salesArr.
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Sales o) {
         if (this.getOrderID() > o.getOrderID()){
